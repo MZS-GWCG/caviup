@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="cfdiv40_detallista" inherit_id="l10n_mx_edi.cfdiv40">
+        <xpath expr="//*[name()='cfdi:Comprobante']" position="attributes" t-if="detallista_values">
+            <attribute name="xmlns__detallista">http://www.sat.gob.mx/detallista</attribute>
+        </xpath>
+        <xpath expr="//*[name()='cfdi:Comprobante']" position="inside">
+            <t t-if="mx_detallista">
+                <cfdi:Complemento xmlns:cfdi="http://www.sat.gob.mx/cfd/4">
+                    <detallista:detallista 
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xmlns:detallista="http://www.sat.gob.mx/detallista"
+                        contentVersion="1.3.1"
+                        documentStatus="ORIGINAL"
+                        documentStructureVersion="AMC8.1"
+                        type="SimpleInvoiceType">
+
+                        <detallista:requestForPaymentIdentification>
+                            <detallista:entityType><t t-if="mx_detallista['move_type'] == 'out_invoice'">INVOICE</t><t t-if="mx_detallista['move_type'] == 'out_refund'">DEBIT_NOTE</t></detallista:entityType>
+                        </detallista:requestForPaymentIdentification>
+                        <detallista:specialInstruction code="ZZZ">
+                            <detallista:text><t t-esc="mx_detallista['amount_to_text']" /></detallista:text>
+                        </detallista:specialInstruction>
+                        <detallista:orderIdentification>
+                            <detallista:referenceIdentification type="ON"><t t-esc="mx_detallista['detallista_purchase_reference']" /></detallista:referenceIdentification>
+                            <detallista:ReferenceDate><t t-esc="mx_detallista['detallista_purchase_reference_date']" /></detallista:ReferenceDate>
+                        </detallista:orderIdentification>
+                        <detallista:AdditionalInformation>
+                            <detallista:referenceIdentification t-att-type="mx_detallista['additional_reference_identification_type']"><t t-esc="mx_detallista['additional_reference_identification']" /></detallista:referenceIdentification>
+                        </detallista:AdditionalInformation>
+                        <detallista:DeliveryNote>
+                            <detallista:referenceIdentification><t t-esc="mx_detallista['delivery_note_reference']" /></detallista:referenceIdentification>
+                            <detallista:ReferenceDate><t t-esc="mx_detallista['delivery_note_date']" /></detallista:ReferenceDate>
+                        </detallista:DeliveryNote>
+                        <detallista:buyer>
+                            <detallista:gln>7504000107903</detallista:gln>
+                            <detallista:contactInformation>
+                                <detallista:personOrDepartmentName>
+                                    <detallista:text><t t-esc="mx_detallista['person_or_department_name']" /></detallista:text>
+                                </detallista:personOrDepartmentName>
+                            </detallista:contactInformation>
+                        </detallista:buyer>
+                        <detallista:seller>
+                            <detallista:gln>0000950000442</detallista:gln>
+                            <detallista:alternatePartyIdentification type="SELLER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"><t t-esc="mx_detallista['alternate_party_identifaction']" /></detallista:alternatePartyIdentification>
+                        </detallista:seller>
+                        <detallista:allowanceCharge allowanceChargeType="ALLOWANCE_GLOBAL" t-att-settlementType="mx_detallista['settlementType']">
+                            <detallista:specialServicesType><t t-esc="mx_detallista['special_services_type']" /></detallista:specialServicesType>
+                            <detallista:monetaryAmountOrPercentage>
+                                <detallista:rate base="INVOICE_VALUE"><detallista:percentage>0.00</detallista:percentage></detallista:rate>
+                            </detallista:monetaryAmountOrPercentage>
+                        </detallista:allowanceCharge>
+                        <t t-foreach=" mx_detallista['lineItems'] " t-as="line">
+                            <detallista:lineItem type="SimpleInvoiceLineItemType" t-att-number="line['current_line']">
+                                <detallista:tradeItemIdentification>
+                                    <detallista:gtin><t t-esc="line['barcode']" /></detallista:gtin>
+                                </detallista:tradeItemIdentification>
+                                <detallista:alternateTradeItemIdentification type="SUPPLIER_ASSIGNED"><t t-esc=" line['default_code'] " /></detallista:alternateTradeItemIdentification>
+                                <detallista:tradeItemDescriptionInformation language="ES">
+                                    <detallista:longText><t t-esc="format_string(line['name'], 35)" /></detallista:longText>
+                                </detallista:tradeItemDescriptionInformation>
+                                <detallista:invoicedQuantity t-att-unitOfMeasure="line['unitOfMeasure'] "><t t-esc="line['quantity'] "/></detallista:invoicedQuantity>
+                                <detallista:grossPrice>
+                                    <detallista:Amount><t t-esc="line['price_unit'] " /></detallista:Amount>
+                                </detallista:grossPrice>
+                                <detallista:netPrice>
+                                    <detallista:Amount><t t-esc="line['netPrice'] " /></detallista:Amount>
+                                </detallista:netPrice>
+                                <detallista:totalLineAmount>
+                                    <detallista:grossAmount>
+                                        <detallista:Amount><t t-esc=" line['grossAmount'] " /></detallista:Amount>
+                                    </detallista:grossAmount>
+                                    <detallista:netAmount>
+                                        <detallista:Amount><t t-esc=" line['netAmount'] " /></detallista:Amount>
+                                    </detallista:netAmount>
+                                </detallista:totalLineAmount>                                
+                            </detallista:lineItem>
+                        </t>
+                        <detallista:totalAmount>
+                            <detallista:Amount><t t-esc=" mx_detallista['subtotal'] " /></detallista:Amount>
+                        </detallista:totalAmount>
+                        <detallista:TotalAllowanceCharge allowanceOrChargeType="ALLOWANCE">
+                            <detallista:specialServicesType><t t-esc="mx_detallista['special_services_type']" /></detallista:specialServicesType>
+                            <detallista:Amount>0.00</detallista:Amount>
+                        </detallista:TotalAllowanceCharge>                        
+                    </detallista:detallista>
+                </cfdi:Complemento>
+            </t>
+        </xpath>
+
+    </template>
+</odoo>

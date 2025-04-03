@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pt_alternative_product_var_form" model="ir.ui.view">
+        <field name="name">pt.alternative.product.var.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[last()]" position="after">
+                <page name="alternative_products" string="Alternative Products" groups="pt_alternative_base.pt_alternative_products">
+                    <group>
+                        <field name="pt_alternative_product_ids" domain="[('id', '!=', id)]" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

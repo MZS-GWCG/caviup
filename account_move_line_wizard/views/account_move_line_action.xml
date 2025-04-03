@@ -1,0 +1,42 @@
+<!-- views/account_move_line_action.xml -->
+
+<odoo>
+    <data>
+        <record id="action_change_account_wizard" model="ir.actions.act_window">
+            <field name="name">Change Account</field>
+            <field name="res_model">change.account.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'active_ids': active_ids}</field>
+        </record>
+
+        <record id="action_change_account_wizard_context" model="ir.actions.server">
+            <field name="name">Change Account</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="binding_model_id" ref="account.model_account_move_line"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = {
+                    'name': 'Change Account',
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'change.account.wizard',
+                    'view_mode': 'form',
+                    'target': 'new',
+                    'context': {'active_ids': records.ids},
+                }
+            </field>
+        </record>
+
+        <record id="account_move_line_action" model="ir.ui.view">
+            <field name="name">account.move.line.action</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="inside">
+                    <field name="id" invisible="1"/>
+                    <button name="%(action_change_account_wizard_context)d" string="Change Account" type="action" class="btn-primary"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

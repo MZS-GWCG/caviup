@@ -1,0 +1,18 @@
+<odoo>
+    <!-- Define a new user group for image editors -->
+    <record id="group_product_image_editor" model="res.groups">
+        <field name="name">Product Image Editor</field>
+    </record>
+
+    <!-- Restrict access to the product image field -->
+    <record id="product_image_edit_rule" model="ir.rule">
+        <field name="name">Product Image Edit Access</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('product_image_editor_access.group_product_image_editor'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+</odoo>

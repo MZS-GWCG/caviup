@@ -1,0 +1,12 @@
+<odoo>
+    <record id="pt_sale_alternative_product_var_form" model="ir.ui.view">
+        <field name="name">pt.sale.alternative.product.var.form</field>
+        <field name="model">pt.alternative.wizard</field>
+        <field name="inherit_id" ref="pt_alternative_base.pt_alternative_wizard_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='alternative_product_ids']/list/field[@name='name']" position="after">
+                <field name="qty_available" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

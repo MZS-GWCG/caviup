@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_mx_edi_detallista_invoice_form" model="ir.ui.view">
+            <field name="name">l10n_mx.edi.detallista.invoice.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@id='other_tab_entry']" position="after">
+                    <page 
+                            id="complemento_detallista" 
+                            string="Complemento Detallista" 
+                            name="complemento_detallista" 
+                            invisible="not l10n_mx_edi_detallista" >
+                        <group>
+                            <group>
+                                <field name="l10n_mx_edi_detallista" invisible="1" />
+                                <field name="detallista_purchase_reference" required="l10n_mx_edi_detallista" />
+                                <field name="detallista_purchase_reference_date" required="l10n_mx_edi_detallista" />
+                                <field name="additional_reference_identification" required="l10n_mx_edi_detallista" />
+                                <field name="additional_reference_identification_type" required="l10n_mx_edi_detallista" />
+                            </group>
+                            <group>
+                                <field name="delivery_note_reference" required="l10n_mx_edi_detallista" />
+                                <field name="delivery_note_date" required="l10n_mx_edi_detallista" />
+                                <field name="person_or_department_name" required="l10n_mx_edi_detallista" />
+                                <field name="alternate_party_identifaction" required="l10n_mx_edi_detallista" />
+                                <field name="special_services_type" required="l10n_mx_edi_detallista" />
+                                <field name="settlementType" required="l10n_mx_edi_detallista" />
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

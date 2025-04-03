@@ -1,0 +1,26 @@
+<odoo>
+    <record id="pt_alternative_wizard_form" model="ir.ui.view">
+        <field name="name">pt.alternative.wizard.form</field>
+        <field name="model">pt.alternative.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Alternative Products">
+                <sheet>
+                    <group>
+                        <field name="change_product_id" options="{'no_create': True}" domain="[('id', 'in', alternative_product_ids)]" string="Replacing Products" />
+                        <field name="alternative_product_ids" readonly="1">
+                            <list create="0" edit="0" delete="0">
+                                <field name="default_code" optional="show"/>
+                                <field name="name"/>
+                                <field name="company_id" groups="base.group_multi_company" />
+                            </list>
+                        </field>
+                    </group>
+                    <footer>
+                        <button class="btn btn-primary" type="object" name="update_product" string="Replace" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

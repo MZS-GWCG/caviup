@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_image_editor,Access to Product Image Editor,product.model_product_template,product_image_editor_access.group_product_image_editor,1,1,0,0

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+        This XML code represents a template for generating an addenda document in the Liverpool format. The addenda document is used for additional information and customization in an invoice or debit note.
+
+        The template contains various elements and attributes defined by the Detallista schema, which is a Mexican standard for electronic invoicing. Some of the key elements include:
+        - requestForPaymentIdentification: Specifies the type of entity (INVOICE or DEBIT_NOTE) and other identification details.
+        - specialInstruction: Provides special instructions related to the payment.
+        - orderIdentification: Contains reference identification and date for the purchase order.
+        - AdditionalInformation: Includes additional reference identification.
+        - DeliveryNote: Contains reference identification and date for the delivery note.
+        - buyer: Specifies the buyer's GLN (Global Location Number) and contact information.
+        - seller: Specifies the seller's GLN and alternate party identification.
+        - allowanceCharge: Represents an allowance or charge applied to the invoice.
+        - lineItem: Represents a line item in the invoice, including trade item identification, description, quantity, price, and total amount.
+        - totalAmount: Represents the total amount of the invoice.
+        - TotalAllowanceCharge: Represents the total allowance or charge applied to the invoice.
+
+        This template can be used as a starting point for generating Liverpool addenda documents in XML format.
+        -->
+        <template id="liverpool_addenda" name="Liverpool">
+            <!-- Template content -->
+        </template>
+        <template id="liverpool_addenda" name="Liverpool">
+            <detallista:detallista xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                   xmlns:detallista="http://www.sat.gob.mx/detallista"
+                                   contentVersion="1.3.1"
+                                   documentStatus="ORIGINAL"
+                                   documentStructureVersion="AMC8.1"
+                                   type="SimpleInvoiceType">
+                <detallista:requestForPaymentIdentification>
+                    <detallista:entityType><t t-if="record.move_type == 'out_invoice'">INVOICE</t><t t-if="record.move_type == 'out_refund'">DEBIT_NOTE</t></detallista:entityType>
+                </detallista:requestForPaymentIdentification>
+                
+                <detallista:specialInstruction code="ZZZ">
+                    <detallista:text><t t-esc="record.amount_to_text(record.amount_total_signed)" /></detallista:text>
+                </detallista:specialInstruction>
+                
+                <detallista:orderIdentification>
+                    <detallista:referenceIdentification type="ON"><t t-esc="record.liverpool_purchase_reference" /></detallista:referenceIdentification>
+                    <detallista:ReferenceDate><t t-esc="record.liverpool_purchase_reference_date" /></detallista:ReferenceDate>
+                </detallista:orderIdentification>
+                
+                <detallista:AdditionalInformation>
+                    <detallista:referenceIdentification t-att-type="record.additional_reference_identification_type"><t t-esc="record.additional_reference_identification" /></detallista:referenceIdentification>
+                </detallista:AdditionalInformation>
+                
+                <detallista:DeliveryNote>
+                    <detallista:referenceIdentification><t t-esc="record.delivery_note_reference" /></detallista:referenceIdentification>
+                    <detallista:ReferenceDate><t t-esc="record.delivery_note_date" /></detallista:ReferenceDate>
+                </detallista:DeliveryNote>
+                
+                <detallista:buyer>
+                    <detallista:gln>7504000107903</detallista:gln>
+                    <detallista:contactInformation>
+                        <detallista:personOrDepartmentName>
+                            <detallista:text><t t-esc="record.person_or_department_name" /></detallista:text>
+                        </detallista:personOrDepartmentName>
+                    </detallista:contactInformation>
+                </detallista:buyer>
+                
+                <detallista:seller>
+                    <detallista:gln>0000950000442</detallista:gln>
+                    <detallista:alternatePartyIdentification type="SELLER_ASSIGNED_IDENTIFIER_FOR_A_PARTY"><t t-esc="record.alternate_party_identifaction" /></detallista:alternatePartyIdentification>
+                </detallista:seller>
+                
+                <detallista:allowanceCharge allowanceChargeType="ALLOWANCE_GLOBAL" t-att-settlementType="record.settlementType">
+                    <detallista:specialServicesType><t t-esc="record.special_services_type" /></detallista:specialServicesType>
+                    <detallista:monetaryAmountOrPercentage>
+                        <detallista:rate base="INVOICE_VALUE"><detallista:percentage>0.00</detallista:percentage></detallista:rate>
+                    </detallista:monetaryAmountOrPercentage>
+                </detallista:allowanceCharge>
+                
+                
+                <t t-set="current_line" t-value="0" />
+                <t t-set="subtotal" t-value="0.00" />
+                <t t-foreach="record.invoice_line_ids" t-as="line">
+                    <t t-set="current_line" t-value="current_line + 1" />
+                    <t t-set="subtotal" t-value="subtotal + (line.price_unit * line.quantity)" />
+                    
+                    
+                    <detallista:lineItem type="SimpleInvoiceLineItemType" t-att-number="current_line">
+                        <detallista:tradeItemIdentification>
+                            <detallista:gtin><t t-esc="line.product_id.barcode" /></detallista:gtin>
+                        </detallista:tradeItemIdentification>
+
+                        <detallista:alternateTradeItemIdentification type="SUPPLIER_ASSIGNED"><t t-esc="line.product_id.default_code" /></detallista:alternateTradeItemIdentification>
+                        
+                        <detallista:tradeItemDescriptionInformation language="ES">
+                            <detallista:longText><t t-esc="line.name" /></detallista:longText>
+                        </detallista:tradeItemDescriptionInformation>
+                        
+                        
+                        <t t-if="line.product_id.uom_id.name == 'Unidades'">
+                        <detallista:invoicedQuantity unitOfMeasure="UNIDAD"><t t-esc="line.quantity"/></detallista:invoicedQuantity>
+                        </t>
+                        <t t-elif="line.product_id.uom_id.name == 'Servicios'">
+                        <detallista:invoicedQuantity unitOfMeasure="SERVICIO"><t t-esc="line.quantity"/></detallista:invoicedQuantity>
+                        </t>
+                        
+                        
+                        <detallista:grossPrice>
+                            <detallista:Amount><t t-esc="line.price_unit" /></detallista:Amount>
+                        </detallista:grossPrice>
+                        
+                        <detallista:netPrice>
+                            <detallista:Amount><t t-esc="line.price_subtotal / line.quantity" /></detallista:Amount>
+                        </detallista:netPrice>
+                        
+                        <detallista:totalLineAmount>
+                            <detallista:grossAmount>
+                                <detallista:Amount><t t-esc="line.price_unit * line.quantity" /></detallista:Amount>
+                            </detallista:grossAmount>
+                            
+                            <detallista:netAmount>
+                                <detallista:Amount><t t-esc="line.price_subtotal" /></detallista:Amount>
+                            </detallista:netAmount>
+                        </detallista:totalLineAmount>
+                    </detallista:lineItem>
+                </t>
+                <detallista:totalAmount>
+                    <detallista:Amount><t t-esc="subtotal" /></detallista:Amount>
+                </detallista:totalAmount>
+                <detallista:TotalAllowanceCharge allowanceOrChargeType="ALLOWANCE">
+                    <detallista:specialServicesType><t t-esc="record.special_services_type" /></detallista:specialServicesType>
+                    <detallista:Amount>0.00</detallista:Amount>
+                </detallista:TotalAllowanceCharge>
+            </detallista:detallista>
+
+        </template>
+
+        <record id="liverpool_addenda" model="ir.ui.view">
+            <field name="l10n_mx_edi_addenda_flag">True</field>
+        </record>
+    </data>
+</odoo>

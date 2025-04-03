@@ -1,0 +1,21 @@
+<!-- views/change_account_wizard_view.xml -->
+
+<odoo>
+    <data>
+        <record id="view_change_account_wizard" model="ir.ui.view">
+            <field name="name">change.account.wizard.form</field>
+            <field name="model">change.account.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Change Account">
+                    <group>
+                        <field name="account_id"/>
+                    </group>
+                    <footer>
+                        <button string="Change Account" type="object" name="change_account" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

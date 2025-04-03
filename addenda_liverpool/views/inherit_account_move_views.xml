@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="cycsas_account_move" model="ir.ui.view">
+            <field name="name">Campos para addenda de Liverpool</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//page[@id='other_tab_entry']" position="after">
+                    <page id="addenda_liverpool" string="Addenda Liverpool" name="addenda_liverpool" attrs="{'invisible': [ '|', ('move_type', '!=', 'out_invoice'), '&amp;', ('move_type', '=', 'out_invoice'), ('addenda_verify', '!=', 'Liverpool')]}">
+                        <group>
+                            <group>
+                                <field name="addenda_verify" invisible="1" />
+                                <field name="liverpool_purchase_reference" attrs="{'required': [('addenda_verify', '=', 'Liverpool') ]}" />
+                                <field name="liverpool_purchase_reference_date" attrs="{'required': [('addenda_verify', '=', 'Liverpool') ]}" />
+                                <field name="additional_reference_identification" attrs="{'required': [('addenda_verify', '=', 'Liverpool') ]}" />
+                                <field name="additional_reference_identification_type" attrs="{'required': [('addenda_verify', '=', 'Liverpool') ]}" />
+                            </group>
+                            <group>
+                                <field name="delivery_note_reference" attrs="{'required': [('addenda_verify', '=', 'Liverpool') ]}" />
+                                <field name="delivery_note_date" attrs="{'required': [('addenda_verify', '=', 'Liverpool') ]}" />
+                                <field name="person_or_department_name" attrs="{'required': [('addenda_verify', '=', 'Liverpool') ]}" />
+                                <field name="alternate_party_identifaction" attrs="{'required': [('addenda_verify', '=', 'Liverpool') ]}" />
+                                <field name="special_services_type" attrs="{'required': [('addenda_verify', '=', 'Liverpool') ]}" />
+                                <field name="settlementType" attrs="{'required': [('addenda_verify', '=', 'Liverpool') ]}" />
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

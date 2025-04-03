@@ -6,7 +6,7 @@ _logger = logging.getLogger(__name__)
 class InheritAccountMove(models.Model):
     _inherit = 'account.move'
 
-    addenda_verify = fields.Char(related="partner_id.l10n_mx_edi_addenda.name", required=True)
+    addenda_verify = fields.Char(related="partner_id.l10n_mx_edi_addenda_id.name", required=True)
     liverpool_purchase_reference = fields.Char('Número de pedido Comprador', required=True)
     liverpool_purchase_reference_date = fields.Date('Fecha de pedido Comprador', default=lambda self: fields.Datetime.now(), required=True)
     additional_reference_identification = fields.Char('Número de referencia adicional', required=True)
